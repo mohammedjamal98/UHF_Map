@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>لوحة تتبع المركبات — بيانات تجريبية</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<div id="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">UHF</div>
+      <div>
+        <h1>لوحة تتبع المركبات</h1>
+        <span>بيانات تجريبية · شبكة نقاط تفتيش UHF</span>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat-chip"><span class="dot green"></span><span id="stat-devices"></span></div>
+      <div class="stat-chip"><span class="dot amber"></span><span id="stat-trips"></span></div>
+      <div class="stat-chip"><span id="stat-txn"></span></div>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <!-- قائمة الرحلات -->
+    <aside class="panel panel-left">
+      <div class="panel-header">
+        <h2>رحلات المركبات</h2>
+        <div class="search-box">
+          <input type="search" id="vehicle-search" placeholder="ابحث برقم اللوحة، اسم السائق، أو بطاقة UHF..." />
+          <button id="clear-search-btn" class="clear-search-btn" title="مسح البحث">×</button>
+        </div>
+      </div>
+      <div class="trip-list" id="trip-list"></div>
+      <div class="search-extra" id="search-extra"></div>
+    </aside>
+
+    <!-- الخريطة -->
+    <main>
+      <div id="map"></div>
+    </main>
+
+    <!-- التبويبات -->
+    <aside class="panel panel-right">
+      <div class="tabs">
+        <button class="tab-btn" data-tab="route">المسار</button>
+        <button class="tab-btn" data-tab="manifest">قائمة الركاب</button>
+        <button class="tab-btn" data-tab="transactions">المعاملات</button>
+      </div>
+
+      <div class="tab-content" id="tab-route">
+        <div id="route-tab-body"></div>
+      </div>
+
+      <div class="tab-content" id="tab-manifest">
+        <div id="manifest-tab-body"></div>
+      </div>
+
+      <div class="tab-content" id="tab-transactions">
+        <div class="txn-filters">
+          <select id="txn-device-filter"></select>
+          <div id="txn-vehicle-chip"></div>
+        </div>
+        <table class="txn-table">
+          <thead>
+            <tr><th>الوقت</th><th>الجهاز</th><th>المركبة</th><th>الاتجاه</th><th>السرعة</th></tr>
+          </thead>
+          <tbody id="txn-tbody"></tbody>
+        </table>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
