@@ -6,6 +6,8 @@ let selectedTripId = null;
 let selectedDeviceFilter = 'all';
 let selectedVehicleFilter = 'all';
 let searchQuery = '';
+let dateFrom = '';
+let dateTo = '';
 let animFrame = null;
 let map, deviceMarkersLayer, routeLayer, vehicleAnimMarker;
 
@@ -87,19 +89,54 @@ function vehicleMatchesQuery(vehicle, q) {
     || normalize(vehicle.tagId).includes(nq);
 }
 
+/* يبحث عن راكب مطابق للاستعلام ضمن قائمة ركاب رحلة معينة */
+function findMatchingPassenger(trip, q) {
+  const m = MANIFESTS[trip.id];
+  if (!m) return null;
+  const nq = normalize(q);
+  return m.passengers.find(p =>
+    normalize(p.name).includes(nq)
+    || normalize(p.nationalId).includes(nq)
+    || normalize(p.phone).includes(nq)
+  ) || null;
+}
+
+/* يحدد ما إذا كانت الرحلة تطابق نص البحث (عبر المركبة أو أحد الركاب) */
+function tripMatchesQuery(trip, q) {
+  if (!q) return { match: true, reason: null, passenger: null };
+  if (vehicleMatchesQuery(vehicleById(trip.vehicleId), q)) {
+    return { match: true, reason: 'vehicle', passenger: null };
+  }
+  const passenger = findMatchingPassenger(trip, q);
+  if (passenger) return { match: true, reason: 'passenger', passenger };
+  return { match: false, reason: null, passenger: null };
+}
+
+/* يتحقق أن تاريخ الرحلة (YYYY-MM-DD) يقع ضمن النطاق الزمني المحدد */
+function dateInRange(dateStr) {
+  if (dateFrom && dateStr < dateFrom) return false;
+  if (dateTo && dateStr > dateTo) return false;
+  return true;
+}
+
 /* ---------------- قائمة الرحلات ---------------- */
 function renderTripList() {
   const list = document.getElementById('trip-list');
   const q = searchQuery.trim();
-  const filteredTrips = TRIPS.filter(trip => vehicleMatchesQuery(vehicleById(trip.vehicleId), q));
 
   document.getElementById('vehicle-search').parentElement.classList.toggle('has-query', !!q);
+  document.getElementById('date-filter').classList.toggle('has-range', !!(dateFrom || dateTo));
+
+  const results = TRIPS
+    .map(trip => ({ trip, info: tripMatchesQuery(trip, q) }))
+    .filter(x => x.info.match && dateInRange(x.trip.startTime.slice(0, 10)));
 
   list.innerHTML = '';
-  if (filteredTrips.length === 0) {
-    list.innerHTML = `<div class="empty-state">لا توجد رحلات مطابقة لبحثك.</div>`;
+  if (results.length === 0) {
+    const msg = q ? 'لا توجد رحلات مطابقة لبحثك.' : 'لا توجد رحلات ضمن النطاق الزمني المحدد.';
+    list.innerHTML = `<div class="empty-state">${msg}</div>`;
   } else {
-    filteredTrips.forEach(trip => {
+    results.forEach(({ trip, info }) => {
       const v = vehicleById(trip.vehicleId);
       const card = document.createElement('div');
       card.className = 'trip-card' + (trip.id === selectedTripId ? ' active' : '');
@@ -109,21 +146,22 @@ function renderTripList() {
           <span class="badge ${trip.status}">${TRIP_STATUS_LABEL[trip.status]}</span>
         </div>
         <div class="trip-route-line">من ${trip.origin} إلى ${trip.destination}</div>
+        ${info.reason === 'passenger' ? `<div class="trip-passenger-match">👤 راكب مطابق: ${info.passenger.name}</div>` : ''}
         <div class="trip-meta">
           <span>${v.type}</span>
           <span>${trip.route.length} قراءة</span>
         </div>
       `;
-      card.addEventListener('click', () => selectTrip(trip.id));
+      card.addEventListener('click', () => selectTrip(trip.id, info.reason === 'passenger' ? 'manifest' : 'route'));
       list.appendChild(card);
     });
   }
 
   renderSearchExtras(q);
 
-  // إذا كانت نتيجة البحث رحلة واحدة فقط، اخترها تلقائياً وأظهرها على الخريطة
-  if (q && filteredTrips.length === 1 && filteredTrips[0].id !== selectedTripId) {
-    selectTrip(filteredTrips[0].id);
+  // إذا كانت نتيجة البحث رحلة واحدة فقط، اخترها تلقائياً وأظهرها
+  if (q && results.length === 1 && results[0].trip.id !== selectedTripId) {
+    selectTrip(results[0].trip.id, results[0].info.reason === 'passenger' ? 'manifest' : 'route');
   }
 }
 
@@ -163,14 +201,14 @@ function renderSearchExtras(q) {
   });
 }
 
-function selectTrip(tripId) {
+function selectTrip(tripId, tab = 'route') {
   selectedTripId = tripId;
   stopAnimation();
   renderTripList();
   renderRouteTab();
   renderManifestTab();
   drawRouteOnMap(tripId);
-  switchTab('route');
+  switchTab(tab);
 }
 
 /* ---------------- رسم المسار ---------------- */
@@ -330,8 +368,16 @@ function renderManifestTab() {
     return;
   }
 
-  const rows = m.passengers.map(p => `
-    <tr>
+  const q = searchQuery.trim();
+  const nq = normalize(q);
+  const rows = m.passengers.map(p => {
+    const isMatch = q && (
+      normalize(p.name).includes(nq)
+      || normalize(p.nationalId).includes(nq)
+      || normalize(p.phone).includes(nq)
+    );
+    return `
+    <tr class="${isMatch ? 'highlight' : ''}">
       <td>${p.name}</td>
       <td><span class="ltr-num">${p.nationalId}</span></td>
       <td>${p.gender}</td>
@@ -339,7 +385,8 @@ function renderManifestTab() {
       <td>${p.seat}</td>
       <td><span class="ltr-num">${p.phone}</span></td>
     </tr>
-  `).join('');
+  `;
+  }).join('');
 
   container.innerHTML = `
     <div class="manifest-header">
@@ -422,7 +469,7 @@ function initTabs() {
   });
 }
 
-/* ---------------- شريط بحث المركبات ---------------- */
+/* ---------------- شريط بحث المركبات والركاب ---------------- */
 function initSearch() {
   const input = document.getElementById('vehicle-search');
   const clearBtn = document.getElementById('clear-search-btn');
@@ -440,11 +487,40 @@ function initSearch() {
   });
 }
 
+/* ---------------- نطاق التاريخ (من / إلى) ---------------- */
+function initDateFilter() {
+  const fromInput = document.getElementById('date-from');
+  const toInput = document.getElementById('date-to');
+  const clearBtn = document.getElementById('clear-date-btn');
+
+  fromInput.addEventListener('change', () => {
+    dateFrom = fromInput.value;
+    toInput.min = dateFrom;
+    renderTripList();
+  });
+
+  toInput.addEventListener('change', () => {
+    dateTo = toInput.value;
+    fromInput.max = dateTo;
+    renderTripList();
+  });
+
+  clearBtn.addEventListener('click', () => {
+    dateFrom = '';
+    dateTo = '';
+    fromInput.value = '';
+    toInput.value = '';
+    fromInput.removeAttribute('max');
+    toInput.removeAttribute('min');
+    renderTripList();
+  });
+}
+
 /* ---------------- شريط الإحصائيات ---------------- */
 function renderStats() {
   const onlineCount = DEVICES.filter(d => d.status === 'online').length;
   const activeTrips = TRIPS.filter(t => t.status === 'in-transit').length;
-  const todayCount = TRANSACTIONS.filter(t => t.timestamp.startsWith('2026-09-19')).length;
+  const todayCount = TRANSACTIONS.filter(t => t.timestamp.startsWith('2026-09-20')).length;
 
   document.getElementById('stat-devices').innerHTML = `<b>${onlineCount}/${DEVICES.length}</b> جهاز متصل`;
   document.getElementById('stat-trips').innerHTML = `<b>${activeTrips}</b> رحلة نشطة`;
@@ -456,6 +532,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMap();
   initTabs();
   initSearch();
+  initDateFilter();
   renderStats();
   renderTripList();
   renderRouteTab();

@@ -26,17 +26,183 @@ const DEVICES = [
   { id: 'DEV-12', name: 'معبر طريبيل الحدودي',    city: 'طريبيل',   lat: 32.9860, lng: 39.0000, type: 'قارئ حدودي',      status: 'warning' },
 ];
 
+/* أرقام المركبات على نمط لوحات التسجيل العراقية: اسم المحافظة + حرف + رقم تسلسلي. */
 const VEHICLES = [
-  { id: 'VEH-01', plate: 'بغداد 12345', tagId: 'E28011700000021234', type: 'حافلة ركاب',   driver: 'أحمد التميمي',   driverPhone: '0770 123 4567' },
-  { id: 'VEH-02', plate: 'بغداد 67890', tagId: 'E28011700000067890', type: 'ميني باص',      driver: 'محمد الجبوري',   driverPhone: '0771 234 5678' },
-  { id: 'VEH-03', plate: 'أربيل 55521', tagId: 'E28011700000055521', type: 'حافلة VIP',     driver: 'حسين السلطاني', driverPhone: '0772 345 6789' },
-  { id: 'VEH-04', plate: 'بغداد 90011', tagId: 'E28011700000090011', type: 'سيارة عامة',    driver: 'كريم الزبيدي',  driverPhone: '0773 456 7890' },
-  { id: 'VEH-05', plate: 'بغداد 33221', tagId: 'E28011700000033221', type: 'ميني باص',      driver: 'علي حسن',       driverPhone: '0774 567 8901' },
+  { id: 'VEH-01', plate: 'بغداد أ 20481',   tagId: 'E28011700000020481', type: 'حافلة ركاب',   driver: 'أحمد التميمي',        driverPhone: '0770 123 4567' },
+  { id: 'VEH-02', plate: 'بغداد ب 67133',   tagId: 'E28011700000067133', type: 'ميني باص',      driver: 'محمد الجبوري',        driverPhone: '0771 234 5678' },
+  { id: 'VEH-03', plate: 'أربيل د 55980',   tagId: 'E28011700000055980', type: 'حافلة VIP',     driver: 'حسين السلطاني',       driverPhone: '0772 345 6789' },
+  { id: 'VEH-04', plate: 'بغداد ج 90417',   tagId: 'E28011700000090417', type: 'سيارة عامة',    driver: 'كريم الزبيدي',        driverPhone: '0773 456 7890' },
+  { id: 'VEH-05', plate: 'بغداد هـ 33221',  tagId: 'E28011700000033221', type: 'ميني باص',      driver: 'علي حسن',             driverPhone: '0774 567 8901' },
+  { id: 'VEH-06', plate: 'البصرة و 71234',  tagId: 'E28011700000071234', type: 'حافلة ركاب',   driver: 'رعد ماجد الفريجي',    driverPhone: '0780 111 2233' },
+  { id: 'VEH-07', plate: 'النجف ز 40012',   tagId: 'E28011700000040012', type: 'ميني باص',      driver: 'ثامر عبدالحسين النجفي', driverPhone: '0781 222 3344' },
+  { id: 'VEH-08', plate: 'كربلاء ح 28890',  tagId: 'E28011700000028890', type: 'حافلة VIP',     driver: 'سعد كاظم الكربلائي',  driverPhone: '0782 333 4455' },
+  { id: 'VEH-09', plate: 'كركوك ط 61345',   tagId: 'E28011700000061345', type: 'سيارة عامة',    driver: 'وليد فاضل الجبوري',   driverPhone: '0783 444 5566' },
+  { id: 'VEH-10', plate: 'نينوى ي 15670',   tagId: 'E28011700000015670', type: 'ميني باص',      driver: 'مازن يونس الموصلي',   driverPhone: '0784 555 6677' },
+  { id: 'VEH-11', plate: 'ذي قار ك 83321',  tagId: 'E28011700000083321', type: 'حافلة ركاب',   driver: 'هيثم صبري الغزي',     driverPhone: '0785 666 7788' },
+  { id: 'VEH-12', plate: 'الأنبار ل 10098', tagId: 'E28011700000010098', type: 'ستيشن خصوصي',  driver: 'قصي نعيم الدليمي',    driverPhone: '0786 777 8899' },
 ];
 
 /* الرحلات: كل توقف يشير إلى الجهاز الذي قرأ بطاقة UHF الخاصة بالمركبة،
-   بالترتيب الزمني الذي حصلت فيه القراءة. */
+   بالترتيب الزمني الذي حصلت فيه القراءة. تغطي الفترة من 2026-09-01 حتى اليوم. */
 const TRIPS = [
+  {
+    id: 'TRIP-0901',
+    vehicleId: 'VEH-06',
+    status: 'completed',
+    origin: 'ميناء البصرة',
+    destination: 'كراج النهضة — بغداد',
+    startTime: '2026-09-01T06:00:00',
+    endTime:   '2026-09-01T14:15:00',
+    route: [
+      { deviceId: 'DEV-07', timestamp: '2026-09-01T06:00:00', direction: 'OUT', speedKmh: 42 },
+      { deviceId: 'DEV-06', timestamp: '2026-09-01T06:45:00', direction: 'IN',  speedKmh: 38 },
+      { deviceId: 'DEV-05', timestamp: '2026-09-01T09:10:00', direction: 'IN',  speedKmh: 90 },
+      { deviceId: 'DEV-04', timestamp: '2026-09-01T11:00:00', direction: 'IN',  speedKmh: 85 },
+      { deviceId: 'DEV-03', timestamp: '2026-09-01T12:25:00', direction: 'IN',  speedKmh: 93 },
+      { deviceId: 'DEV-01', timestamp: '2026-09-01T13:45:00', direction: 'IN',  speedKmh: 58 },
+      { deviceId: 'DEV-16', timestamp: '2026-09-01T14:15:00', direction: 'IN',  speedKmh: 20 },
+    ],
+  },
+  {
+    id: 'TRIP-0903',
+    vehicleId: 'VEH-07',
+    status: 'completed',
+    origin: 'النجف',
+    destination: 'كراج النهضة — بغداد',
+    startTime: '2026-09-03T07:00:00',
+    endTime:   '2026-09-03T10:05:00',
+    route: [
+      { deviceId: 'DEV-04', timestamp: '2026-09-03T07:00:00', direction: 'OUT', speedKmh: 50 },
+      { deviceId: 'DEV-03', timestamp: '2026-09-03T08:10:00', direction: 'IN',  speedKmh: 60 },
+      { deviceId: 'DEV-01', timestamp: '2026-09-03T09:40:00', direction: 'IN',  speedKmh: 55 },
+      { deviceId: 'DEV-16', timestamp: '2026-09-03T10:05:00', direction: 'IN',  speedKmh: 18 },
+    ],
+  },
+  {
+    id: 'TRIP-0905',
+    vehicleId: 'VEH-08',
+    status: 'completed',
+    origin: 'كربلاء',
+    destination: 'كراج النهضة — بغداد',
+    startTime: '2026-09-05T08:00:00',
+    endTime:   '2026-09-05T09:50:00',
+    route: [
+      { deviceId: 'DEV-03', timestamp: '2026-09-05T08:00:00', direction: 'OUT', speedKmh: 48 },
+      { deviceId: 'DEV-01', timestamp: '2026-09-05T09:20:00', direction: 'IN',  speedKmh: 62 },
+      { deviceId: 'DEV-16', timestamp: '2026-09-05T09:50:00', direction: 'IN',  speedKmh: 22 },
+    ],
+  },
+  {
+    id: 'TRIP-0907',
+    vehicleId: 'VEH-09',
+    status: 'completed',
+    origin: 'كركوك',
+    destination: 'كراج النهضة — بغداد',
+    startTime: '2026-09-07T06:30:00',
+    endTime:   '2026-09-07T11:05:00',
+    route: [
+      { deviceId: 'DEV-10', timestamp: '2026-09-07T06:30:00', direction: 'OUT', speedKmh: 70 },
+      { deviceId: 'DEV-14', timestamp: '2026-09-07T09:45:00', direction: 'IN',  speedKmh: 80 },
+      { deviceId: 'DEV-01', timestamp: '2026-09-07T10:40:00', direction: 'IN',  speedKmh: 45 },
+      { deviceId: 'DEV-16', timestamp: '2026-09-07T11:05:00', direction: 'IN',  speedKmh: 19 },
+    ],
+  },
+  {
+    id: 'TRIP-0909',
+    vehicleId: 'VEH-10',
+    status: 'completed',
+    origin: 'الموصل',
+    destination: 'كراج النهضة — بغداد',
+    startTime: '2026-09-09T05:45:00',
+    endTime:   '2026-09-09T12:25:00',
+    route: [
+      { deviceId: 'DEV-09', timestamp: '2026-09-09T05:45:00', direction: 'OUT', speedKmh: 65 },
+      { deviceId: 'DEV-10', timestamp: '2026-09-09T07:50:00', direction: 'IN',  speedKmh: 75 },
+      { deviceId: 'DEV-14', timestamp: '2026-09-09T11:05:00', direction: 'IN',  speedKmh: 82 },
+      { deviceId: 'DEV-01', timestamp: '2026-09-09T12:00:00', direction: 'IN',  speedKmh: 50 },
+      { deviceId: 'DEV-16', timestamp: '2026-09-09T12:25:00', direction: 'IN',  speedKmh: 21 },
+    ],
+  },
+  {
+    id: 'TRIP-0911',
+    vehicleId: 'VEH-11',
+    status: 'completed',
+    origin: 'الناصرية',
+    destination: 'كراج النهضة — بغداد',
+    startTime: '2026-09-11T07:15:00',
+    endTime:   '2026-09-11T12:15:00',
+    route: [
+      { deviceId: 'DEV-05', timestamp: '2026-09-11T07:15:00', direction: 'OUT', speedKmh: 55 },
+      { deviceId: 'DEV-04', timestamp: '2026-09-11T09:05:00', direction: 'IN',  speedKmh: 88 },
+      { deviceId: 'DEV-03', timestamp: '2026-09-11T10:25:00', direction: 'IN',  speedKmh: 91 },
+      { deviceId: 'DEV-01', timestamp: '2026-09-11T11:50:00', direction: 'IN',  speedKmh: 57 },
+      { deviceId: 'DEV-16', timestamp: '2026-09-11T12:15:00', direction: 'IN',  speedKmh: 20 },
+    ],
+  },
+  {
+    id: 'TRIP-0913',
+    vehicleId: 'VEH-12',
+    status: 'completed',
+    origin: 'معبر طريبيل الحدودي',
+    destination: 'الكرادة — بغداد',
+    startTime: '2026-09-13T06:00:00',
+    endTime:   '2026-09-13T13:20:00',
+    route: [
+      { deviceId: 'DEV-12', timestamp: '2026-09-13T06:00:00', direction: 'IN', speedKmh: 40 },
+      { deviceId: 'DEV-17', timestamp: '2026-09-13T12:30:00', direction: 'IN', speedKmh: 85 },
+      { deviceId: 'DEV-01', timestamp: '2026-09-13T13:20:00', direction: 'IN', speedKmh: 45 },
+    ],
+  },
+  {
+    id: 'TRIP-0914',
+    vehicleId: 'VEH-01',
+    status: 'completed',
+    origin: 'كراج النهضة — بغداد',
+    destination: 'ميناء البصرة',
+    startTime: '2026-09-14T06:00:00',
+    endTime:   '2026-09-14T14:05:00',
+    route: [
+      { deviceId: 'DEV-16', timestamp: '2026-09-14T06:00:00', direction: 'OUT', speedKmh: 20 },
+      { deviceId: 'DEV-01', timestamp: '2026-09-14T06:25:00', direction: 'IN',  speedKmh: 55 },
+      { deviceId: 'DEV-03', timestamp: '2026-09-14T07:50:00', direction: 'IN',  speedKmh: 92 },
+      { deviceId: 'DEV-04', timestamp: '2026-09-14T09:10:00', direction: 'IN',  speedKmh: 87 },
+      { deviceId: 'DEV-05', timestamp: '2026-09-14T11:00:00', direction: 'IN',  speedKmh: 90 },
+      { deviceId: 'DEV-06', timestamp: '2026-09-14T13:20:00', direction: 'IN',  speedKmh: 40 },
+      { deviceId: 'DEV-07', timestamp: '2026-09-14T14:05:00', direction: 'IN',  speedKmh: 38 },
+    ],
+  },
+  {
+    id: 'TRIP-0916',
+    vehicleId: 'VEH-06',
+    status: 'completed',
+    origin: 'ميناء البصرة',
+    destination: 'كراج النهضة — بغداد',
+    startTime: '2026-09-16T06:10:00',
+    endTime:   '2026-09-16T14:25:00',
+    route: [
+      { deviceId: 'DEV-07', timestamp: '2026-09-16T06:10:00', direction: 'OUT', speedKmh: 44 },
+      { deviceId: 'DEV-06', timestamp: '2026-09-16T06:55:00', direction: 'IN',  speedKmh: 37 },
+      { deviceId: 'DEV-05', timestamp: '2026-09-16T09:20:00', direction: 'IN',  speedKmh: 89 },
+      { deviceId: 'DEV-04', timestamp: '2026-09-16T11:10:00', direction: 'IN',  speedKmh: 86 },
+      { deviceId: 'DEV-03', timestamp: '2026-09-16T12:35:00', direction: 'IN',  speedKmh: 94 },
+      { deviceId: 'DEV-01', timestamp: '2026-09-16T13:55:00', direction: 'IN',  speedKmh: 59 },
+      { deviceId: 'DEV-16', timestamp: '2026-09-16T14:25:00', direction: 'IN',  speedKmh: 21 },
+    ],
+  },
+  {
+    id: 'TRIP-0917',
+    vehicleId: 'VEH-02',
+    status: 'completed',
+    origin: 'معبر طريبيل الحدودي',
+    destination: 'السوق المركزي — بغداد',
+    startTime: '2026-09-17T05:35:00',
+    endTime:   '2026-09-17T12:40:00',
+    route: [
+      { deviceId: 'DEV-12', timestamp: '2026-09-17T05:35:00', direction: 'OUT', speedKmh: 36 },
+      { deviceId: 'DEV-03', timestamp: '2026-09-17T11:20:00', direction: 'IN',  speedKmh: 87 },
+      { deviceId: 'DEV-01', timestamp: '2026-09-17T12:40:00', direction: 'IN',  speedKmh: 52 },
+    ],
+  },
   {
     id: 'TRIP-1001',
     vehicleId: 'VEH-01',
@@ -61,11 +227,11 @@ const TRIPS = [
     status: 'in-transit',
     origin: 'معبر طريبيل الحدودي',
     destination: 'السوق المركزي — بغداد',
-    startTime: '2026-09-19T05:30:00',
+    startTime: '2026-09-20T05:30:00',
     endTime: null,
     route: [
-      { deviceId: 'DEV-12', timestamp: '2026-09-19T05:30:00', direction: 'IN', speedKmh: 35 },
-      { deviceId: 'DEV-03', timestamp: '2026-09-19T11:15:00', direction: 'IN', speedKmh: 88 },
+      { deviceId: 'DEV-12', timestamp: '2026-09-20T05:30:00', direction: 'IN', speedKmh: 35 },
+      { deviceId: 'DEV-03', timestamp: '2026-09-20T11:15:00', direction: 'IN', speedKmh: 88 },
     ],
   },
   {
@@ -74,11 +240,11 @@ const TRIPS = [
     status: 'in-transit',
     origin: 'أربيل',
     destination: 'كراج النهضة — بغداد',
-    startTime: '2026-09-19T04:00:00',
+    startTime: '2026-09-20T04:00:00',
     endTime: null,
     route: [
-      { deviceId: 'DEV-08', timestamp: '2026-09-19T04:00:00', direction: 'OUT', speedKmh: 55 },
-      { deviceId: 'DEV-10', timestamp: '2026-09-19T06:20:00', direction: 'IN',  speedKmh: 79 },
+      { deviceId: 'DEV-08', timestamp: '2026-09-20T04:00:00', direction: 'OUT', speedKmh: 55 },
+      { deviceId: 'DEV-10', timestamp: '2026-09-20T06:20:00', direction: 'IN',  speedKmh: 79 },
     ],
   },
   {
@@ -93,9 +259,93 @@ const TRIPS = [
   },
 ];
 
+/* ---- مولّد أسماء ركاب عشوائي لكنه ثابت (Seeded) ----
+   يُستخدم لبناء قوائم ركاب واقعية للرحلات الإضافية دون تكرار يدوي مضجر،
+   مع ضمان أن تكون نفس البيانات تظهر في كل مرة يُفتح فيها التطبيق. */
+const MALE_NAMES = ['أحمد', 'محمد', 'علي', 'حسين', 'مصطفى', 'عمر', 'حيدر', 'كريم', 'باسم', 'فراس', 'ياسر', 'رعد', 'ثامر', 'سعد', 'وليد', 'مازن', 'هيثم', 'قصي', 'ماجد', 'سالم', 'عدنان', 'رياض', 'فاضل', 'جبار', 'كاظم', 'عباس', 'طارق', 'نبيل', 'صباح', 'رافد'];
+const FEMALE_NAMES = ['زينب', 'نور', 'سارة', 'هدى', 'رنا', 'إيمان', 'رغد', 'ياسمين', 'دلال', 'بان', 'شهد', 'مريم', 'زهراء', 'آيات', 'بتول', 'ريم', 'شيماء', 'لمى', 'فاطمة', 'سجى'];
+const PHONE_PREFIXES = ['0770', '0771', '0772', '0773', '0774', '0780', '0781', '0782', '0783', '0790', '0791', '0792'];
+
+function seededRng(seedStr) {
+  let h = 0;
+  for (let i = 0; i < seedStr.length; i++) h = (Math.imul(31, h) + seedStr.charCodeAt(i)) | 0;
+  let state = (h >>> 0) || 1;
+  return function () {
+    state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+    return state / 4294967296;
+  };
+}
+const pick = (rng, arr) => arr[Math.floor(rng() * arr.length)];
+
+function generatePassengers(tripId, count) {
+  const rng = seededRng(tripId);
+  const list = [];
+  for (let i = 0; i < count; i++) {
+    const isMale = rng() < 0.55;
+    const first = pick(rng, isMale ? MALE_NAMES : FEMALE_NAMES);
+    const father = pick(rng, MALE_NAMES);
+    const grandfather = pick(rng, MALE_NAMES);
+    const age = 18 + Math.floor(rng() * 52);
+    const birthYear = 2026 - age;
+    const serial = String(1000000 + Math.floor(rng() * 8999999));
+    const phonePrefix = pick(rng, PHONE_PREFIXES);
+    const phoneMid = 100 + Math.floor(rng() * 900);
+    const phoneEnd = 1000 + Math.floor(rng() * 9000);
+    list.push({
+      name: `${first} ${father} ${grandfather}`,
+      nationalId: `${birthYear}${serial}`,
+      gender: isMale ? 'ذكر' : 'أنثى',
+      age,
+      seat: i + 1,
+      phone: `${phonePrefix} ${phoneMid} ${phoneEnd}`,
+    });
+  }
+  return list;
+}
+
 /* قوائم الركاب (Manifest) — بيانات الأشخاص المسجّلين على متن كل رحلة،
    بدلاً من بيانات بضائع/مواد. */
 const MANIFESTS = {
+  'TRIP-0901': {
+    manifestNo: 'MAN-2026-000901', tripRef: 'رحلة رقم T-90101', carrier: 'شركة الرافدين للنقل',
+    totalPassengers: 26, totalLuggage: 30, passengers: generatePassengers('TRIP-0901', 6),
+  },
+  'TRIP-0903': {
+    manifestNo: 'MAN-2026-000903', tripRef: 'رحلة رقم T-90301', carrier: 'مؤسسة العتبات لنقل الزائرين',
+    totalPassengers: 16, totalLuggage: 18, passengers: generatePassengers('TRIP-0903', 5),
+  },
+  'TRIP-0905': {
+    manifestNo: 'MAN-2026-000905', tripRef: 'رحلة رقم T-90501', carrier: 'شركة الحسين لنقل الزوار',
+    totalPassengers: 20, totalLuggage: 22, passengers: generatePassengers('TRIP-0905', 6),
+  },
+  'TRIP-0907': {
+    manifestNo: 'MAN-2026-000907', tripRef: 'رحلة رقم T-90701', carrier: 'شركة الشمال لنقل الركاب',
+    totalPassengers: 14, totalLuggage: 15, passengers: generatePassengers('TRIP-0907', 5),
+  },
+  'TRIP-0909': {
+    manifestNo: 'MAN-2026-000909', tripRef: 'رحلة رقم T-90901', carrier: 'شركة الشمال لنقل الركاب',
+    totalPassengers: 17, totalLuggage: 19, passengers: generatePassengers('TRIP-0909', 5),
+  },
+  'TRIP-0911': {
+    manifestNo: 'MAN-2026-000911', tripRef: 'رحلة رقم T-91101', carrier: 'شركة الفرات لنقل المسافرين',
+    totalPassengers: 24, totalLuggage: 27, passengers: generatePassengers('TRIP-0911', 6),
+  },
+  'TRIP-0913': {
+    manifestNo: 'MAN-2026-000913', tripRef: 'رحلة رقم T-91301', carrier: 'مركبة خاصة (بدون ناقل تجاري)',
+    totalPassengers: 3, totalLuggage: 5, passengers: generatePassengers('TRIP-0913', 3),
+  },
+  'TRIP-0914': {
+    manifestNo: 'MAN-2026-000914', tripRef: 'رحلة رقم T-91401', carrier: 'شركة الرافدين للنقل',
+    totalPassengers: 22, totalLuggage: 25, passengers: generatePassengers('TRIP-0914', 5),
+  },
+  'TRIP-0916': {
+    manifestNo: 'MAN-2026-000916', tripRef: 'رحلة رقم T-91601', carrier: 'شركة الرافدين للنقل',
+    totalPassengers: 27, totalLuggage: 31, passengers: generatePassengers('TRIP-0916', 6),
+  },
+  'TRIP-0917': {
+    manifestNo: 'MAN-2026-000917', tripRef: 'رحلة رقم T-91701', carrier: 'مكتب الأمانة لنقل المسافرين',
+    totalPassengers: 13, totalLuggage: 15, passengers: generatePassengers('TRIP-0917', 5),
+  },
   'TRIP-1001': {
     manifestNo: 'MAN-2026-001122',
     tripRef: 'رحلة رقم T-88213',
@@ -159,11 +409,11 @@ const MANIFESTS = {
 /* قراءات إضافية "خلفية" — مركبات تعبر أجهزة خارج أي رحلة متتبَّعة،
    فقط لجعل سجل المعاملات الحي يبدو واقعياً. */
 const NOISE_TRANSACTIONS = [
-  { deviceId: 'DEV-01', vehicleId: 'VEH-05', timestamp: '2026-09-19T07:12:00', direction: 'IN',  speedKmh: 28 },
-  { deviceId: 'DEV-02', vehicleId: 'VEH-05', timestamp: '2026-09-19T07:40:00', direction: 'OUT', speedKmh: 33 },
-  { deviceId: 'DEV-13', vehicleId: 'VEH-05', timestamp: '2026-09-19T08:05:00', direction: 'IN',  speedKmh: 30 },
-  { deviceId: 'DEV-16', vehicleId: 'VEH-05', timestamp: '2026-09-19T08:30:00', direction: 'IN',  speedKmh: 20 },
-  { deviceId: 'DEV-01', vehicleId: 'VEH-05', timestamp: '2026-09-19T13:05:00', direction: 'OUT', speedKmh: 25 },
+  { deviceId: 'DEV-01', vehicleId: 'VEH-05', timestamp: '2026-09-20T07:12:00', direction: 'IN',  speedKmh: 28 },
+  { deviceId: 'DEV-02', vehicleId: 'VEH-05', timestamp: '2026-09-20T07:40:00', direction: 'OUT', speedKmh: 33 },
+  { deviceId: 'DEV-13', vehicleId: 'VEH-05', timestamp: '2026-09-20T08:05:00', direction: 'IN',  speedKmh: 30 },
+  { deviceId: 'DEV-16', vehicleId: 'VEH-05', timestamp: '2026-09-20T08:30:00', direction: 'IN',  speedKmh: 20 },
+  { deviceId: 'DEV-01', vehicleId: 'VEH-05', timestamp: '2026-09-20T13:05:00', direction: 'OUT', speedKmh: 25 },
 ];
 
 /* تجميع كل توقفات الرحلات + القراءات الخلفية في سجل معاملات واحد. */

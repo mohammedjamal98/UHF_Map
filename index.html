@@ -37,8 +37,19 @@
       <div class="panel-header">
         <h2>رحلات المركبات</h2>
         <div class="search-box">
-          <input type="search" id="vehicle-search" placeholder="ابحث برقم اللوحة، اسم السائق، أو بطاقة UHF..." />
+          <input type="search" id="vehicle-search" placeholder="ابحث برقم اللوحة، اسم السائق، اسم راكب، أو بطاقة UHF..." />
           <button id="clear-search-btn" class="clear-search-btn" title="مسح البحث">×</button>
+        </div>
+        <div class="date-filter" id="date-filter">
+          <div class="date-field">
+            <label for="date-from">من تاريخ</label>
+            <input type="date" id="date-from">
+          </div>
+          <div class="date-field">
+            <label for="date-to">إلى تاريخ</label>
+            <input type="date" id="date-to">
+          </div>
+          <button id="clear-date-btn" class="date-clear-btn" title="مسح النطاق الزمني">×</button>
         </div>
       </div>
       <div class="trip-list" id="trip-list"></div>

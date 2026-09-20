@@ -154,6 +154,59 @@ select, input[type="search"] {
 }
 .search-box.has-query .clear-search-btn { display: block; }
 
+.date-filter {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  margin-top: 8px;
+}
+.date-filter .date-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+.date-filter label {
+  font-size: 10px;
+  color: var(--text-dim);
+}
+.date-filter input[type="date"] {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 5px 6px;
+  font-size: 11px;
+  width: 100%;
+  font-family: inherit;
+  color-scheme: dark;
+}
+.date-clear-btn {
+  flex: 0 0 auto;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  border-radius: 6px;
+  width: 26px;
+  height: 26px;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  display: none;
+}
+.date-filter.has-range .date-clear-btn { display: block; }
+
+.trip-passenger-match {
+  font-size: 11px;
+  color: var(--accent-2);
+  background: rgba(79,140,255,.12);
+  border-radius: 6px;
+  padding: 3px 7px;
+  margin-bottom: 6px;
+  display: inline-block;
+}
+
 /* ---------- Trip cards ---------- */
 .trip-list { padding: 4px 10px 16px; display: flex; flex-direction: column; gap: 8px; }
 
@@ -392,6 +445,7 @@ table.manifest-items tfoot td {
   border-bottom: none;
   padding-top: 8px;
 }
+table.manifest-items tr.highlight td { background: rgba(79,140,255,.12); }
 
 /* ---------- Transactions ---------- */
 .txn-filters {
