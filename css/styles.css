@@ -289,17 +289,50 @@ select, input[type="search"] {
   cursor: pointer;
 }
 
-.device-icon {
-  width: 22px; height: 22px;
+.device-marker {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.device-marker--online { color: var(--green); }
+.device-marker--warning { color: var(--amber); }
+.device-marker--offline { color: var(--gray); }
+
+.device-pulse {
+  position: absolute;
+  inset: 0;
   border-radius: 50%;
+  background: currentColor;
+  opacity: 0.55;
+  pointer-events: none;
+  animation: device-pulse-ring 2.2s ease-out infinite;
+}
+.device-pulse--delay { animation-delay: 1.1s; }
+.device-marker--warning .device-pulse { animation-duration: 1.4s; }
+.device-marker--offline .device-pulse { display: none; }
+
+.device-icon-inner {
+  position: relative;
+  z-index: 1;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 2px solid #0b1120;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 12px;
   box-shadow: 0 0 0 2px rgba(255,255,255,.08);
 }
-.device-icon.online { background: var(--green); }
-.device-icon.offline { background: var(--gray); }
-.device-icon.warning { background: var(--amber); }
+.device-icon-inner svg { color: #06101f; }
+
+@keyframes device-pulse-ring {
+  0%   { transform: scale(0.6); opacity: 0.55; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
 
 .stop-icon {
   background: var(--accent);

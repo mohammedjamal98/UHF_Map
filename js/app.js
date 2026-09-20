@@ -39,8 +39,21 @@ function initMap() {
   renderDeviceMarkers();
 }
 
-function statusEmoji(status) {
-  return status === 'online' ? '●' : status === 'warning' ? '!' : '×';
+/* أيقونة هوائي UHF مع نبض إشارة متحرك يدل على أن الجهاز يبثّ/يستقبل حياً */
+function buildDeviceMarkerHtml(dev) {
+  return `
+    <div class="device-marker device-marker--${dev.status}">
+      <span class="device-pulse"></span>
+      <span class="device-pulse device-pulse--delay"></span>
+      <div class="device-icon-inner">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <circle cx="12" cy="19" r="1.6" fill="currentColor" stroke="none"/>
+          <path d="M8.2 15.2a5.4 5.4 0 0 1 7.6 0"/>
+          <path d="M4.8 11.8a10.4 10.4 0 0 1 14.4 0"/>
+        </svg>
+      </div>
+    </div>
+  `;
 }
 
 function renderDeviceMarkers() {
@@ -48,7 +61,7 @@ function renderDeviceMarkers() {
   DEVICES.forEach(dev => {
     const icon = L.divIcon({
       className: '',
-      html: `<div class="device-icon ${dev.status}">${statusEmoji(dev.status)}</div>`,
+      html: buildDeviceMarkerHtml(dev),
       iconSize: [22, 22],
       iconAnchor: [11, 11],
     });
